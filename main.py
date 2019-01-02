@@ -47,6 +47,7 @@ def generator_test(b_s, imgs_test_path):
         yield [preprocess_images(images[counter:counter + b_s], shape_r, shape_c), gaussian]
         counter = (counter + b_s) % len(images)
 
+
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         raise NotImplementedError
@@ -54,7 +55,8 @@ if __name__ == '__main__':
         phase = sys.argv[1]
         x = Input((3, shape_r, shape_c))
         x_maps = Input((nb_gaussian, shape_r_gt, shape_c_gt))
-
+        print(x)
+        print(x_maps)
         if version == 0:
             m = Model(input=[x, x_maps], output=sam_vgg([x, x_maps]))
             print("Compiling SAM-VGG")
@@ -109,7 +111,6 @@ if __name__ == '__main__':
 
             print("Predicting saliency maps for " + imgs_test_path)
             predictions = m.predict_generator(generator_test(b_s=b_s, imgs_test_path=imgs_test_path), nb_imgs_test)[0]
-
 
             for pred, name in zip(predictions, file_names):
                 original_image = cv2.imread(imgs_test_path + name, 0)

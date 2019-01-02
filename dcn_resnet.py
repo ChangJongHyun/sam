@@ -11,6 +11,8 @@ from keras.layers import BatchNormalization
 from keras. models import Model
 from keras import backend as K
 from keras.utils.data_utils import get_file
+import keras
+
 
 TH_WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_th_dim_ordering_th_kernels_notop.h5'
 
@@ -131,13 +133,12 @@ def dcn_resnet(input_tensor=None):
             img_input = input_tensor
 
     bn_axis = 1
-
     # conv_1
     x = ZeroPadding2D((3, 3))(img_input)
     x = Convolution2D(64, 7, 7, subsample=(2, 2), name='conv1')(x)
     x = BatchNormalization(axis=bn_axis, name='bn_conv1')(x)
     x = Activation('relu')(x)
-    x = MaxPooling2D((3, 3), strides=(2, 2), border_mode='same')(x)
+    x = MaxPooling2D((3, 3), strides=(2, 2), padding='same')(x)
 
     # conv_2
     x = conv_block(x, 3, [64, 64, 256], stage=2, block='a', strides=(1, 1))
